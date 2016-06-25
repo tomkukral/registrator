@@ -94,7 +94,7 @@ class Registrator
       elsif user['notifications']['payment'].nil? and !user['payment_at'].nil?
         # send payment_confirmation
         mailer('payment', user)
-      elsif user['payment_at'].nil? && user['notifications']['payment_reminder'].nil? && (DateTime.now - DateTime.parse(user['created_at'])).to_f >= @config['reminder_days']
+      elsif user['payment_at'].nil? && user['notifications']['payment_reminder'].nil? && (DateTime.now - user['created_at']).to_f >= @config['reminder_days']
         # payment reminder 
         mailer('payment_reminder', user)
       end
@@ -207,39 +207,38 @@ class Registrator
 
     transactions = {}
 
-    #open(url) do |f|
-    #  file = f.read
-    #  parsed = JSON.parse(file)
+    open(url) do |f|
+      file = f.read
+      parsed = JSON.parse(file)
 
-    #  # loop transactions and save to var
-    #  unless parsed['accountStatement']['transactionList'].nil?
-    #    parsed['accountStatement']['transactionList']['transaction'].each do |item|
-    #      vs = item['column5']['value'].to_s unless item['column5'].nil?
-    #      unless vs.nil?
-    #        transactions[vs] = {
-    #          amount: item['column1']['value'],
-    #          comment: item['column25'].nil? ? nil : item['column25']['value']
-    #        }
-    #      end
-    #    end
-    #  end
+      # loop transactions and save to var
+      unless parsed['accountStatement']['transactionList'].nil?
+        parsed['accountStatement']['transactionList']['transaction'].each do |item|
+          vs = item['column5']['value'].to_s unless item['column5'].nil?
+          unless vs.nil?
+            transactions[vs] = {
+              amount: item['column1']['value'],
+              comment: item['column25'].nil? ? nil : item['column25']['value']
+            }
+          end
+        end
+      end
 
-    #  pp transactions
+      pp transactions
 
-    #  # loop people with payment == nil
-    #  @users.each do |key, user|
-    #    if user['payment_at'].nil? and !user['payment_id'].nil?
-    #      # will try to find payment
-    #      puts "looking payment with VS #{user['payment_id']}"
-    #      puts transactions[user['payment_id']]
-    #      if !transactions[user['payment_id']].nil? && transactions[user['payment_id']][:amount] == amount_required
-    #        puts "uživatel zaplatil"
-    #        user['payment_at'] = DateTime.now
-    #      end
-    #    end
-    #  end
-
-    #end
+      # loop people with payment == nil
+      @users.each do |key, user|
+        if user['payment_at'].nil? and !user['payment_id'].nil?
+          # will try to find payment
+          puts "looking payment with VS #{user['payment_id']}"
+          puts transactions[user['payment_id']]
+          if !transactions[user['payment_id']].nil? && transactions[user['payment_id']][:amount] == amount_required
+            puts "uživatel zaplatil"
+            user['payment_at'] = DateTime.now
+          end
+        end
+      end
+    end
 
   end
 end
