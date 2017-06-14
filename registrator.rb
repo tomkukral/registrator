@@ -31,7 +31,7 @@ class Registrator
     # save datastore
     datastore_save
 
-    # send emails 
+    # send emails
     send_emails
 
     # save datastore
@@ -54,7 +54,7 @@ class Registrator
     end
   end
 
-  # 
+  #
   # default objects
   #
 
@@ -79,7 +79,7 @@ class Registrator
     return user
   end
 
-  # 
+  #
   # sending emails
   #
 
@@ -95,7 +95,7 @@ class Registrator
         # send payment_confirmation
         mailer('payment', user)
       elsif user['payment_at'].nil? && user['notifications']['payment_reminder'].nil? && (DateTime.now - user['created_at']).to_f >= @config['reminder_days']
-        # payment reminder 
+        # payment reminder
         mailer('payment_reminder', user)
       end
 
@@ -164,7 +164,6 @@ class Registrator
 
   # save to DATASTORE_PATH file
   def datastore_save
-    #File.write(DATASTORE_PATH, @users.to_json) 
     File.write(cur_dir(DATASTORE_FILE), @users.to_yaml)
   end
 

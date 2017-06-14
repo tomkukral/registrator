@@ -1,0 +1,17 @@
+# field for user identification
+field: E-mail
+# payment id is acquired from this feild
+field_payid: 'Telefonní číslo '
+# remind payment in 3 day
+reminder_days: 3
+# bank token (FIO bank)
+token: MXsometokenYj
+# CSV file
+registered_url: https://docs.google.com/spreadsheets/d/1olsjdlfskdf/export?format=csv
+# when we start to read payments
+period_begin: 2016-06-01
+# required amount
+amount_required: 2100
+# sender email address
+email_sender: admin@localhost
+reminder_days: 7
